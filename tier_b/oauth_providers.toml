@@ -1,0 +1,38 @@
+# Tier-B OAuth / SSO provider patterns (v0.1).
+# Community PRs can add providers without code changes.
+
+[[provider]]
+id = "google"
+button_text = ["Sign in with Google", "Continue with Google", "Log in with Google", "Login with Google"]
+href_hosts = ["accounts.google.com", "google.com"]
+href_path_contains = ["/o/oauth2", "/signin/oauth"]
+
+[[provider]]
+id = "github"
+button_text = ["Sign in with GitHub", "Continue with GitHub", "Login with GitHub"]
+href_hosts = ["github.com"]
+href_path_contains = ["/login/oauth"]
+
+[[provider]]
+id = "microsoft"
+button_text = ["Sign in with Microsoft", "Continue with Microsoft", "Sign in with Azure AD"]
+href_hosts = ["login.microsoftonline.com", "login.live.com"]
+href_path_contains = ["/oauth2", "/authorize"]
+
+[[provider]]
+id = "okta"
+button_text = ["Sign in with Okta", "Okta"]
+href_hosts = ["okta.com"]
+href_path_contains = ["/oauth2", "/authorize"]
+
+[[provider]]
+id = "auth0"
+button_text = ["Sign in with Auth0", "Auth0"]
+href_hosts = ["auth0.com"]
+href_path_contains = ["/authorize", "/login"]
+
+[[provider]]
+id = "gitlab"
+button_text = ["Sign in with GitLab", "GitLab"]
+href_hosts = ["gitlab.com"]
+href_path_contains = ["/oauth"]

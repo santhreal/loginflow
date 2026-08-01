@@ -1,0 +1,19 @@
+[package]
+name = "loginflow-fuzz"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+loginflow = { path = ".." }
+
+[[bin]]
+name = "jwt_parser"
+path = "fuzz_targets/jwt_parser.rs"
+doc = false
+
+[workspace]

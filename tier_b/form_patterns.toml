@@ -1,0 +1,33 @@
+# Tier-B login form field patterns (v0.1 sample).
+# Community PRs can extend this file without code changes.
+
+[[username]]
+name = "user"
+name = "username"
+name = "email"
+name = "login"
+name = "userid"
+id = "username"
+id = "email"
+id = "login"
+placeholder = "email"
+placeholder = "username"
+aria_label = "email"
+aria_label = "username"
+
+[[password]]
+type = "password"
+
+[[csrf]]
+name = "csrf"
+name = "csrf_token"
+name = "_csrf"
+name = "authenticity_token"
+name = "__RequestVerificationToken"
+name = "csrfmiddlewaretoken"
+
+[[honeypot]]
+name_contains = "honeypot"
+name_contains = "hp_field"
+name = "url"
+class_contains = "honeypot"
