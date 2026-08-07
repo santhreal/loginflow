@@ -56,7 +56,14 @@ impl TotpSecret {
 ///
 /// Returns [`MfaError::Totp`] on decode failure.
 pub fn totp_code_at(secret_base32: &str, time_step: u64) -> Result<String, MfaError> {
-    let key = base32::decode(Alphabet::Rfc4648 { padding: false }, secret_base32.trim())
+    let clean_secret: String = secret_base32
+        .chars()
+        .filter(|c| !c.is_whitespace() && *c != '-')
+        .collect::<String>()
+        .trim_end_matches('=')
+        .to_uppercase();
+
+    let key = base32::decode(Alphabet::Rfc4648 { padding: false }, &clean_secret)
         .ok_or_else(|| MfaError::Totp("invalid base32 secret".into()))?;
 
     let code = totp_custom::<Sha1>(TIME_STEP_SECS, CODE_DIGITS, &key, time_step);

@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3] - 2026-08-07
+
+### Fixed
+
+- Preserved lossy UTF-8 response header values in HTTP fast-path (`src/http_fastpath.rs`) to prevent dropping non-ASCII header bytes to empty string.
+- Normalized base32 TOTP secret input in `totp_code_at` (`src/mfa/totp.rs`) to handle whitespace, hyphens, lowercase characters, and `=` padding.
+
 ## [0.1.2] - 2026-08-07
 
 ### Fixed

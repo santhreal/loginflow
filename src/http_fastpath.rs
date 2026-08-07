@@ -121,7 +121,7 @@ pub(crate) async fn perform_http_login_with_identity(
     let headers: Vec<(String, String)> = response
         .headers()
         .iter()
-        .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
+        .map(|(k, v)| (k.to_string(), String::from_utf8_lossy(v.as_bytes()).to_string()))
         .collect();
     let header_refs: Vec<(&str, &str)> = headers
         .iter()

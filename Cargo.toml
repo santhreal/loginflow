@@ -1,6 +1,6 @@
 [package]
 name = "loginflow"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 rust-version = "1.88"
 license = "MIT OR Apache-2.0"
@@ -267,3 +267,6 @@ path = "tests/regression/redaction.rs"
 [[test]]
 name = "adversarial_never_completes"
 path = "tests/adversarial/never_completes.rs"
+[[test]]
+name = "unit_totp_normalizes_base32_secret"
+path = "tests/unit/totp_normalizes_base32_secret.rs"
