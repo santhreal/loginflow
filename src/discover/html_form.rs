@@ -91,10 +91,19 @@ fn score_form(form: &DiscoveredForm) -> u32 {
     if form.http_simple {
         score += 10;
     }
-    if form.csrf_fields.is_empty() {
-        score += 1;
+    if !form.csrf_fields.is_empty() {
+        score += 5;
     }
-    score += u32::try_from(form.username_field.len()).unwrap_or(0);
+    if form.submit_selector.is_some() {
+        score += 3;
+    }
+    let lower_action = form.action_url.to_ascii_lowercase();
+    for hint in ["/login", "/signin", "/session", "/auth", "/log_in", "/sign_in"] {
+        if lower_action.contains(hint) {
+            score += 5;
+            break;
+        }
+    }
     score
 }
 
@@ -113,15 +122,14 @@ fn analyze_form(form: ElementRef<'_>, page_url: &Url, index: usize) -> Option<Di
     let method = form
         .value()
         .attr("method")
-        .map(|m| m.eq_ignore_ascii_case("get"))
-        .map(|is_get| {
-            if is_get {
-                FormMethod::Get
-            } else {
+        .map(|m| {
+            if m.eq_ignore_ascii_case("post") {
                 FormMethod::Post
+            } else {
+                FormMethod::Get
             }
         })
-        .unwrap_or(FormMethod::Post);
+        .unwrap_or(FormMethod::Get);
 
     let action = form.value().attr("action").unwrap_or("");
     let action_url = resolve_action(page_url, action);
@@ -160,21 +168,15 @@ fn analyze_form(form: ElementRef<'_>, page_url: &Url, index: usize) -> Option<Di
             continue;
         }
 
-        if input_type == "hidden" || input_type == "text" && is_honeypot(input) {
-            if is_honeypot(input) {
-                continue;
-            }
-            let value = input.value().attr("value").unwrap_or("").to_string();
-            if is_csrf_name(&name) {
-                csrf_fields.push((name, value));
-            } else if input_type == "hidden" {
-                extra_hidden.push((name, value));
-            }
+        if is_honeypot(input) {
             continue;
         }
 
-        if is_honeypot(input) {
-            continue;
+        let value = input.value().attr("value").unwrap_or("").to_string();
+        if is_csrf_name(&name) {
+            csrf_fields.push((name, value));
+        } else if input_type == "hidden" {
+            extra_hidden.push((name, value));
         }
     }
 
@@ -425,5 +427,63 @@ mod tests {
         let page = Url::parse("https://x.test/").expect("url");
         let forms = discover_login_forms_in_html(html, &page).expect("parse");
         assert!(forms.is_empty());
+    }
+
+    #[test]
+    fn missing_method_defaults_to_get_per_html_spec() {
+        let html = r#"
+        <form action="/login">
+          <input type="text" name="user" />
+          <input type="password" name="pass" />
+        </form>
+        "#;
+        let page = Url::parse("https://x.test/").expect("url");
+        let form = discover_best_login_form(html, &page)
+            .expect("parse")
+            .expect("form");
+        assert_eq!(form.method, FormMethod::Get);
+    }
+
+    #[test]
+    fn score_form_selects_login_form_over_register_form_with_long_field_name() {
+        let html = r#"
+        <html><body>
+        <form action="/register" method="post">
+          <input type="text" name="a_very_long_username_field_name_for_registration" />
+          <input type="password" name="register_pass" />
+        </form>
+        <form action="/login" method="post">
+          <input type="hidden" name="csrf_token" value="sec123" />
+          <input type="text" name="user" />
+          <input type="password" name="pass" />
+          <button type="submit">Sign in</button>
+        </form>
+        </body></html>
+        "#;
+        let page = Url::parse("https://app.example/home").expect("url");
+        let form = discover_best_login_form(html, &page)
+            .expect("parse")
+            .expect("form");
+        assert_eq!(form.action_url, "https://app.example/login");
+        assert_eq!(form.username_field, "user");
+        assert_eq!(form.csrf_fields, vec![("csrf_token".to_string(), "sec123".to_string())]);
+    }
+
+    #[test]
+    fn captures_csrf_in_visible_text_field_and_skips_honeypot() {
+        let html = r#"
+        <form action="/login" method="post">
+          <input type="text" name="csrf_token" value="token_val" />
+          <input type="text" name="hp_field" style="display:none" value="bot" />
+          <input type="text" name="username" />
+          <input type="password" name="password" />
+        </form>
+        "#;
+        let page = Url::parse("https://x.test/").expect("url");
+        let form = discover_best_login_form(html, &page)
+            .expect("parse")
+            .expect("form");
+        assert_eq!(form.csrf_fields, vec![("csrf_token".to_string(), "token_val".to_string())]);
+        assert!(form.extra_hidden.is_empty());
     }
 }

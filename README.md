@@ -1,6 +1,6 @@
 # loginflow - browser-driven login discovery, form drive, MFA, and session capture into authjar
 
-[![santh status](https://img.shields.io/badge/santh-prototype-orange)](https://santh.dev/standard)
+[![santh status](https://img.shields.io/badge/santh-beta-blue)](https://santh.dev/standard)
 
 ## What it does
 Loginflow drives a target from URL + credentials to a captured session in authjar. It handles HTML form discovery, browser fill/submit via runtime-headless, TOTP MFA, HTTP fast-path compatible with scald's `LoginFlow`, and canary verification.

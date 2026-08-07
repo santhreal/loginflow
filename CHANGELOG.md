@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.2] - 2026-08-07
+
+### Fixed
+
+- Corrected missing `method` attribute fallback in HTML form discovery (`src/discover/html_form.rs`) to default to `GET` per HTML5 specification instead of `POST`.
+- Updated form ranking score (`score_form`) to prioritize principled login signals (password fields, submit controls, CSRF tokens, action URL hints) over field-name character counts and missing CSRF bonuses.
+- Restructured input classification in `analyze_form` so honeypot attributes are evaluated once up-front and CSRF tokens are captured even when present in visible text inputs.
+- Updated `rust-toolchain.toml` channel to 1.88 matching `Cargo.toml` MSRV requirement.
+
 ## 0.1.1 - 2026-07-31
 
 ### Security

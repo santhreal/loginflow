@@ -1,10 +1,10 @@
 [package]
 name = "loginflow"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 rust-version = "1.88"
 license = "MIT OR Apache-2.0"
-authors = ["Santh Project <contact@santh.dev>"]
+authors = ["Santh <64453045+santhreal@users.noreply.github.com>"]
 repository = "https://github.com/santhreal/loginflow"
 homepage = "https://santh.dev"
 description = "Browser-driven login discovery, form drive, MFA, and session capture into authjar"
@@ -263,3 +263,7 @@ path = "tests/adversarial/discover_js_obfuscation.rs"
 [[test]]
 name = "regression_redaction"
 path = "tests/regression/redaction.rs"
+
+[[test]]
+name = "adversarial_never_completes"
+path = "tests/adversarial/never_completes.rs"
