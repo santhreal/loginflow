@@ -17,8 +17,8 @@ publish = true
 status = "beta"
 
 [dependencies]
-authjar = { version = "0.2.5" }
-runtime-headless = { version = "0.1.1", optional = true }
+authjar = { path = "../authjar", version = "0.2.5" }
+runtime-headless = { path = "../headless", version = "0.1.1", optional = true }
 scraper = "=0.26.0"
 url = "=2.5.8"
 serde = { version = "=1.0.228", features = ["derive"] }
@@ -31,13 +31,13 @@ reqwest = { version = "=0.12.28", default-features = false, features = ["cookies
 base32 = "=0.5.1"
 totp-lite = "=2.0.1"
 async-trait = "=0.1.89"
-guise = { version = "0.1.3", features = ["fingerprint", "human"], default-features = false, optional = true }
+guise = { path = "../guise", version = "0.1.3", optional = true, default-features = false, features = ["fingerprint", "human"] }
 toml = "=0.8.23"
 clap = { version = "=4.6.1", features = ["derive"] }
-santh-cli = { version = "0.1.1" }
-santh-tracing = { version = "0.2.1" }
-secfinding = { version = "0.4.1" }
-tracing = { version = "0.1.44" }
+santh-cli = { path = "../../general/santh-cli", version = "0.1.1" }
+santh-tracing = { path = "../../general/santh-tracing", version = "0.2.1" }
+secfinding = { path = "../../scanner/secfinding", version = "0.4.1" }
+tracing = { workspace = true }
 # Path dep omitted so loginflow can join the Santh root workspace (captchaforge declares
 # its own `[workspace]`). Local builds with `--features captchaforge` use [patch.crates-io].
 captchaforge = { version = "=0.2.36", optional = true, default-features = false }
@@ -53,10 +53,10 @@ tokio = { version = "=1.51.1", features = ["macros", "rt-multi-thread", "net", "
 wiremock = "=0.6.5"
 proptest = "=1.9.0"
 assert_cmd = "2"
-criterion = { version = "0.5.1" }
-rustls = { version = "0.23.27", features = ["ring"] }
-tokio-rustls = { version = "0.26.4" }
-rcgen = { version = "0.14.7" }
+criterion = { workspace = true }
+rustls = { workspace = true, features = ["ring"] }
+tokio-rustls = { workspace = true }
+rcgen = { workspace = true }
 
 [[bench]]
 name = "login_bench"
